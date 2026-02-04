@@ -7,8 +7,8 @@
 const MAX_SECTIONS = 5;
 
 const COUNTRIES = [
-  "American 🇺🇸","Arabic","Indian","Bangladeshi","Pakistani","Chinese","Japanese","Korean",
-  "Spanish","French","German","Russian","Italian","Turkish"
+  "American 🇺🇸","Arabic 🇸🇦","Indian 🇮🇳","Bangladeshi 🇧🇩","Pakistani 🇵🇰","Chinese 🇨🇳","Japanese 🇯🇵","Korean 🇰🇷🇰🇵",
+  "Spanish 🇪🇸","French 🇫🇷","German 🇩🇪","Russian 🇷🇺","Italian 🇮🇹","Turkish 🇹🇷"
 ];
 
 // Names data is loaded on-demand per country to keep initial JS small.
