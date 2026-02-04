@@ -526,29 +526,6 @@ body{
   100%{ opacity: 0; transform: translateX(-50%) translateY(10px); }
 }
 
-
-/* Mobile: center and enlarge Generate button */
-@media (max-width: 520px){
-  .controls{
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: stretch;
-  }
-  /* 3rd control is the Generate button wrapper */
-  .controls .control:nth-child(3){
-    grid-column: 1 / -1;
-  }
-  .controls .control:nth-child(3) .btn{
-    width: min(320px, 100%);
-    justify-self: center;
-    margin: 6px auto 0;
-    padding: 14px 18px;
-    border-radius: 16px;
-  }
-  .controls .control:nth-child(3) .btn-text{
-    font-size: 30px;
-  }
-}
-
 @media (max-width: 860px){
   .controls{
   display:grid;
@@ -624,10 +601,33 @@ html[data-theme="dark"] .out-label{ color: rgba(255,255,255,.70); }
 
 .control{ min-width: 0; }
 
-@media (max-width: 520px){
+@media (max-width: 560px){
   .controls{
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+    align-items: center;
+    gap: 10px;
   }
+
+  /* 3rd control (Generate) spans full row & centers */
+  .controls .control:nth-child(3){
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 100%;
+    margin-top: -10px; /* lift up a bit */
+  }
+  .controls .control:nth-child(3) .label{ display:none; }
+
+  .controls .control:nth-child(3) .btn{
+    max-width: 360px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 14px 18px !important;
+  }
+  .controls .control:nth-child(3) .btn-text{
+    font-size: 28px !important;
+  }
+}
+
   .controls .btn{
     grid-column: 1 / -1;
     width: 100%;
