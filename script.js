@@ -7,7 +7,7 @@
 const MAX_SECTIONS = 5;
 
 const COUNTRIES = [
-  "American","Arabic","Indian","Bangladeshi","Pakistani","Chinese","Japanese","Korean",
+  "American🇺🇸","Arabic","Indian","Bangladeshi","Pakistani","Chinese","Japanese","Korean",
   "Spanish","French","German","Russian","Italian","Turkish"
 ];
 
