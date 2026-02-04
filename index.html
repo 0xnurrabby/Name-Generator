@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Name & Username Generator</title>
+  <meta name="description" content="Generate names & unique-looking usernames fast." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=12">
+
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+  <div class="topspacer"></div>
+  <button class="theme" id="themeToggle" type="button" aria-label="Toggle theme">
+    <span class="theme-ico" aria-hidden="true" id="themeIcon">☀️</span>
+    <span class="theme-text" id="themeLabel">Light</span>
+  </button>
+</header>
+
+    <main class="content">
+      <div class="grid" id="sections"></div>
+    </main>
+
+    <button class="fab fab-anim" id="addSectionBtn" type="button" aria-label="Add section">
+      <span class="fab-plus">＋</span>
+    </button>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <template id="sectionTemplate">
+    <section class="card">
+      <div class="card-head">
+        <div class="card-head-left"></div>
+<div class="head-right">
+          <div class="meta" data-role="meta">Section</div>
+          <button class="icon danger" type="button" data-action="remove" aria-label="Remove section" title="Remove section">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="control">
+          <label class="label">Gender</label>
+          <div class="select" data-role="gender">
+            <button class="select-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
+              <span class="select-value">Random Name</span>
+              <span class="chev" aria-hidden="true">▾</span>
+            </button>
+            <div class="select-menu" role="listbox">
+              <button class="select-item" type="button" data-value="random">Random Name</button>
+              <button class="select-item" type="button" data-value="male">Male Name</button>
+              <button class="select-item" type="button" data-value="female">Female Name</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="control">
+          <label class="label">Country</label>
+          <div class="select" data-role="country">
+            <button class="select-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
+              <span class="select-value">Random</span>
+              <span class="chev" aria-hidden="true">▾</span>
+            </button>
+            <div class="select-menu" role="listbox" data-role="countryMenu"></div>
+          </div>
+        </div>
+
+        <div class="control">
+          <label class="label">&nbsp;</label>
+          <button class="btn btn-anim" type="button" data-action="generate"><span class="btn-text">Generate</span></button>
+        </div>
+      </div>
+
+      <div class="outputs">
+        <div class="out" data-action="copyName" tabindex="0" role="button" aria-label="Copy name">
+          <div class="out-top">
+            <div class="out-label">Name</div>
+            <div class="out-hint">Tap to copy</div>
+          </div>
+          <div class="out-value mono" data-role="nameValue">—</div>
+        </div>
+
+        <div class="out" data-action="copyUsername" tabindex="0" role="button" aria-label="Copy username">
+          <div class="out-top">
+            <div class="out-label">Username</div>
+            <div class="out-hint">Tap to copy</div>
+          </div>
+
+          <div class="out-row">
+            <div class="out-value mono" data-role="usernameValue">—</div>
+            <button class="icon regen" type="button" data-action="regenUsername" aria-label="Regenerate username" title="Regenerate username">
+              <svg class="regen-ico" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21 12a9 9 0 1 1-2.64-6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M21 3v6h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">Tip: Add up to 5 sections and generate in parallel.</div>
+    </section>
+  </template>
+
+  <script src="script.js?v=21"></script>
+</body>
+</html>
