@@ -219,7 +219,7 @@ body{
 
 .controls{
   display:grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(160px, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   align-items:end;
 }
@@ -420,10 +420,8 @@ body{
   transition: transform var(--speed), box-shadow var(--speed), filter var(--speed);
   position: relative;
   overflow: hidden;
-
-  min-width: 0
-
-  max-width: 100%
+  min-width: 0;
+  max-width: 100%;
 }
 .btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow); }
 .btn:active{ transform: translateY(0px) scale(.99); }
@@ -528,11 +526,8 @@ body{
 
 @media (max-width: 860px){
   .controls{
-  display:grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(160px, 1fr);
-  gap: 12px;
-  align-items:end;
-}
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
   .outputs{ grid-template-columns: 1fr; }
 }
@@ -584,7 +579,7 @@ body{
   100%{ color:#3b82f6; }
 }
 
-html[data-theme="dark"] .select-value{ color: rgba(17,24,39,.70); }
+html[data-theme="dark"] .select-value{ color: rgba(255,255,255,.86); }
 
 .topspacer{ flex: 1; }
 
@@ -603,34 +598,22 @@ html[data-theme="dark"] .out-label{ color: rgba(255,255,255,.70); }
 
 @media (max-width: 560px){
   .controls{
-    grid-template-columns: minmax(0,1fr) minmax(0,1fr);
-    align-items: center;
+    grid-template-columns: 1fr;
+    align-items: stretch;
     gap: 10px;
   }
 
-  /* 3rd control (Generate) spans full row & centers */
-  .controls .control:nth-child(3){
-    grid-column: 1 / -1;
-    justify-self: center;
-    width: 100%;
-    margin-top: -10px; /* lift up a bit */
-  }
-  .controls .control:nth-child(3) .label{ display:none; }
+  .controls .control:nth-child(4){ margin-top: 4px; }
+  .controls .control:nth-child(4) .label{ display:none; }
 
-  .controls .control:nth-child(3) .btn{
+  .controls .control:nth-child(4) .btn{
     max-width: 360px !important;
     width: 100% !important;
     margin: 0 auto !important;
     padding: 14px 18px !important;
   }
-  .controls .control:nth-child(3) .btn-text{
+  .controls .control:nth-child(4) .btn-text{
     font-size: 28px !important;
-  }
-}
-
-  .controls .btn{
-    grid-column: 1 / -1;
-    width: 100%;
   }
 }
 
@@ -660,22 +643,18 @@ html[data-theme="dark"] .out-label{ color: rgba(255,255,255,.70); }
 
 /* ===== Mobile generate button: perfect center + slight spacing (auto-added) ===== */
 @media (max-width:560px){
-  /* make the 3rd control (Generate) span full row and center */
-  .controls .control:nth-child(3){
-    grid-column: 1 / -1 !important;
+  .controls .control:nth-child(4){
     width: 100% !important;
     display: flex !important;
     justify-content: center !important;
-    margin-top: 10px !important; /* a bit down (was too high before) */
+    margin-top: 10px !important;
   }
 
-  /* remove the label spacer so the button doesn't jump upward */
-  .controls .control:nth-child(3) .label{
+  .controls .control:nth-child(4) .label{
     display: none !important;
   }
 
-  /* center the button itself and keep equal left/right space */
-  .controls .control:nth-child(3) .btn{
+  .controls .control:nth-child(4) .btn{
     width: 100% !important;
     max-width: 360px !important;
     margin: 0 auto !important;
@@ -684,8 +663,7 @@ html[data-theme="dark"] .out-label{ color: rgba(255,255,255,.70); }
     padding: 14px 18px !important;
   }
 
-  /* make the Generate text a bit bigger on mobile */
-  .controls .control:nth-child(3) .btn-text{
+  .controls .control:nth-child(4) .btn-text{
     font-size: 26px !important;
   }
 }

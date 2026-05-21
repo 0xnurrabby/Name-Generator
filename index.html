@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=12">
+  <link rel="stylesheet" href="styles.css?v=13">
 
 </head>
 <body>
@@ -73,6 +73,17 @@
         </div>
 
         <div class="control">
+          <label class="label">Religion</label>
+          <div class="select" data-role="religion">
+            <button class="select-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
+              <span class="select-value">Any Religion</span>
+              <span class="chev" aria-hidden="true">▾</span>
+            </button>
+            <div class="select-menu" role="listbox" data-role="religionMenu"></div>
+          </div>
+        </div>
+
+        <div class="control">
           <label class="label">&nbsp;</label>
           <button class="btn btn-anim" type="button" data-action="generate"><span class="btn-text">Generate</span></button>
         </div>
@@ -109,6 +120,6 @@
     </section>
   </template>
 
-  <script src="script.js?v=21"></script>
+  <script src="script.js?v=22"></script>
 </body>
 </html>
