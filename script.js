@@ -6,11 +6,11 @@
 
 const MAX_SECTIONS = 5;
 
-// Vercel AI Gateway config – set your token here, via VITE_VERCEL_GATEWAY_TOKEN env,
-// or paste it into the "AI Settings" input on the page (persisted in localStorage).
+// Vercel AI Gateway config: set your token here or paste it into
+// the "AI Settings" input on the page (persisted in localStorage).
 const GATEWAY_CONFIG = {
   baseUrl: "https://gateway.vercel.ai/v1/chat/completions",
-  model: "gemini-2.5-flash-lite",
+  model: "google/gemini-2.5-flash-lite",
   token: "",
 };
 
@@ -20,10 +20,7 @@ function getGatewayToken(){
     const saved = localStorage.getItem("vg_token");
     if (saved) return saved;
   } catch(_){}
-  try {
-    if (typeof import.meta !== "undefined" && import.meta.env?.VITE_VERCEL_GATEWAY_TOKEN)
-      return import.meta.env.VITE_VERCEL_GATEWAY_TOKEN;
-  } catch(_){}
+  if (window.VERCEL_GATEWAY_TOKEN) return window.VERCEL_GATEWAY_TOKEN;
   return "";
 }
 
