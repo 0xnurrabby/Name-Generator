@@ -119,6 +119,93 @@ const RELIGION_DATA = {
 
 const FULL_NAME_POOL_CACHE = new Map();
 
+const ADDRESS_DATA = {
+  American: { country: "United States", regionLabel: "State", postalLabel: "ZIP Code", suffixes: ["Street","Avenue","Road","Drive","Lane","Boulevard"], streets: ["Maple","Oak","Cedar","Washington","Lincoln","Hillcrest","Sunset","Lakeview"], regions: [
+    { region: "California", cities: ["Los Angeles","San Diego","San Jose","Sacramento"], prefix: "90" },
+    { region: "New York", cities: ["New York","Buffalo","Albany","Rochester"], prefix: "10" },
+    { region: "Texas", cities: ["Houston","Dallas","Austin","San Antonio"], prefix: "75" },
+    { region: "Florida", cities: ["Miami","Orlando","Tampa","Jacksonville"], prefix: "33" }
+  ]},
+  Arabic: { country: "Saudi Arabia", regionLabel: "Province", postalLabel: "Postal Code", suffixes: ["Street","Road","District","Avenue"], streets: ["King Fahd","Olaya","Prince Sultan","Al Noor","Al Andalus","Makkah","Al Rawdah","Corniche"], regions: [
+    { region: "Riyadh Province", cities: ["Riyadh","Al Kharj","Diriyah"], prefix: "12" },
+    { region: "Makkah Province", cities: ["Jeddah","Makkah","Taif"], prefix: "21" },
+    { region: "Eastern Province", cities: ["Dammam","Khobar","Dhahran"], prefix: "34" },
+    { region: "Madinah Province", cities: ["Madinah","Yanbu","Al Ula"], prefix: "42" }
+  ]},
+  Indian: { country: "India", regionLabel: "State", postalLabel: "PIN Code", suffixes: ["Road","Marg","Nagar","Street","Lane","Colony"], streets: ["MG","Nehru","Park","Station","Lake","Gandhi","Ashoka","Temple"], regions: [
+    { region: "Maharashtra", cities: ["Mumbai","Pune","Nagpur","Nashik"], prefix: "40" },
+    { region: "Delhi", cities: ["New Delhi","Dwarka","Rohini","Saket"], prefix: "11" },
+    { region: "Karnataka", cities: ["Bengaluru","Mysuru","Mangaluru","Hubballi"], prefix: "56" },
+    { region: "West Bengal", cities: ["Kolkata","Howrah","Siliguri","Durgapur"], prefix: "70" }
+  ]},
+  Bangladeshi: { country: "Bangladesh", regionLabel: "Division", postalLabel: "Postal Code", suffixes: ["Road","Lane","Sarani","Avenue","Para","Bazar Road"], streets: ["Dhanmondi","Banani","Station","College","Lake","Shapla","Green","Nawab"], regions: [
+    { region: "Dhaka", cities: ["Dhaka","Gazipur","Narayanganj","Savar"], prefix: "12" },
+    { region: "Chattogram", cities: ["Chattogram","Cox's Bazar","Cumilla","Feni"], prefix: "40" },
+    { region: "Sylhet", cities: ["Sylhet","Moulvibazar","Habiganj","Sunamganj"], prefix: "31" },
+    { region: "Rajshahi", cities: ["Rajshahi","Bogura","Pabna","Natore"], prefix: "60" }
+  ]},
+  Pakistani: { country: "Pakistan", regionLabel: "Province", postalLabel: "Postal Code", suffixes: ["Road","Street","Avenue","Colony","Block","Lane"], streets: ["Jinnah","Iqbal","Mall","Canal","Garden","Model Town","Clifton","University"], regions: [
+    { region: "Punjab", cities: ["Lahore","Rawalpindi","Faisalabad","Multan"], prefix: "54" },
+    { region: "Sindh", cities: ["Karachi","Hyderabad","Sukkur","Larkana"], prefix: "75" },
+    { region: "Khyber Pakhtunkhwa", cities: ["Peshawar","Mardan","Abbottabad","Swat"], prefix: "25" },
+    { region: "Balochistan", cities: ["Quetta","Gwadar","Turbat","Khuzdar"], prefix: "87" }
+  ]},
+  Chinese: { country: "China", regionLabel: "Province", postalLabel: "Postal Code", suffixes: ["Road","Street","Avenue","Lane"], streets: ["Renmin","Zhongshan","Jiefang","Heping","Dongfang","Xinhua","Huashan","Nanjing"], regions: [
+    { region: "Beijing", cities: ["Beijing","Chaoyang","Haidian","Fengtai"], prefix: "100" },
+    { region: "Shanghai", cities: ["Shanghai","Pudong","Minhang","Xuhui"], prefix: "200" },
+    { region: "Guangdong", cities: ["Guangzhou","Shenzhen","Foshan","Dongguan"], prefix: "510" },
+    { region: "Zhejiang", cities: ["Hangzhou","Ningbo","Wenzhou","Shaoxing"], prefix: "310" }
+  ]},
+  Japanese: { country: "Japan", regionLabel: "Prefecture", postalLabel: "Postal Code", suffixes: ["chome","dori","machi","street"], streets: ["Sakura","Aoba","Nakamachi","Honcho","Minami","Kita","Shinjuku","Ginza"], regions: [
+    { region: "Tokyo", cities: ["Shinjuku","Setagaya","Shibuya","Taito"], prefix: "160" },
+    { region: "Osaka", cities: ["Osaka","Sakai","Toyonaka","Higashiosaka"], prefix: "530" },
+    { region: "Kyoto", cities: ["Kyoto","Uji","Kameoka","Maizuru"], prefix: "600" },
+    { region: "Hokkaido", cities: ["Sapporo","Hakodate","Asahikawa","Otaru"], prefix: "060" }
+  ]},
+  Korean: { country: "South Korea", regionLabel: "Province", postalLabel: "Postal Code", suffixes: ["ro","gil","daero","street"], streets: ["Sejong","Teheran","Jongno","Gangnam","Mapo","Haeundae","Nambu","Central"], regions: [
+    { region: "Seoul", cities: ["Gangnam-gu","Jongno-gu","Mapo-gu","Songpa-gu"], prefix: "06" },
+    { region: "Busan", cities: ["Haeundae-gu","Suyeong-gu","Dongnae-gu","Sasang-gu"], prefix: "48" },
+    { region: "Gyeonggi-do", cities: ["Suwon","Seongnam","Goyang","Yongin"], prefix: "16" },
+    { region: "Incheon", cities: ["Bupyeong-gu","Namdong-gu","Yeonsu-gu","Jung-gu"], prefix: "21" }
+  ]},
+  Spanish: { country: "Spain", regionLabel: "Province", postalLabel: "Postal Code", suffixes: ["Calle","Avenida","Paseo","Plaza"], streets: ["Mayor","Real","Gran Via","Sol","Alameda","Castilla","Rosario","Libertad"], regions: [
+    { region: "Madrid", cities: ["Madrid","Alcala de Henares","Getafe","Leganes"], prefix: "28" },
+    { region: "Barcelona", cities: ["Barcelona","Badalona","Sabadell","Terrassa"], prefix: "08" },
+    { region: "Valencia", cities: ["Valencia","Alicante","Castellon","Elche"], prefix: "46" },
+    { region: "Seville", cities: ["Seville","Dos Hermanas","Utrera","Ecija"], prefix: "41" }
+  ]},
+  French: { country: "France", regionLabel: "Region", postalLabel: "Postal Code", suffixes: ["Rue","Avenue","Boulevard","Impasse"], streets: ["Victor Hugo","Jean Jaures","de la Paix","Pasteur","Voltaire","Carnot","Republique","Gare"], regions: [
+    { region: "Ile-de-France", cities: ["Paris","Versailles","Saint-Denis","Nanterre"], prefix: "75" },
+    { region: "Provence-Alpes-Cote d'Azur", cities: ["Marseille","Nice","Toulon","Avignon"], prefix: "13" },
+    { region: "Auvergne-Rhone-Alpes", cities: ["Lyon","Grenoble","Saint-Etienne","Annecy"], prefix: "69" },
+    { region: "Nouvelle-Aquitaine", cities: ["Bordeaux","Limoges","Poitiers","Pau"], prefix: "33" }
+  ]},
+  German: { country: "Germany", regionLabel: "State", postalLabel: "Postal Code", suffixes: ["Strasse","Weg","Allee","Platz"], streets: ["Haupt","Bahnhof","Garten","Schiller","Goethe","Kirch","Berg","Linden"], regions: [
+    { region: "Bavaria", cities: ["Munich","Nuremberg","Augsburg","Regensburg"], prefix: "80" },
+    { region: "Berlin", cities: ["Berlin","Mitte","Pankow","Spandau"], prefix: "10" },
+    { region: "North Rhine-Westphalia", cities: ["Cologne","Dusseldorf","Dortmund","Essen"], prefix: "50" },
+    { region: "Hesse", cities: ["Frankfurt","Wiesbaden","Kassel","Darmstadt"], prefix: "60" }
+  ]},
+  Russian: { country: "Russia", regionLabel: "Region", postalLabel: "Postal Code", suffixes: ["Street","Prospekt","Lane","Ulitsa"], streets: ["Lenina","Mira","Sovetskaya","Gagarina","Pushkina","Centralnaya","Sadovaya","Kirova"], regions: [
+    { region: "Moscow", cities: ["Moscow","Zelenograd","Troitsk","Khimki"], prefix: "101" },
+    { region: "Saint Petersburg", cities: ["Saint Petersburg","Pushkin","Kolpino","Peterhof"], prefix: "190" },
+    { region: "Tatarstan", cities: ["Kazan","Naberezhnye Chelny","Almetyevsk","Nizhnekamsk"], prefix: "420" },
+    { region: "Sverdlovsk Oblast", cities: ["Yekaterinburg","Nizhny Tagil","Kamensk-Uralsky","Pervouralsk"], prefix: "620" }
+  ]},
+  Italian: { country: "Italy", regionLabel: "Region", postalLabel: "CAP", suffixes: ["Via","Viale","Corso","Piazza"], streets: ["Roma","Garibaldi","Dante","Cavour","Verdi","Manzoni","Mazzini","Vittorio Veneto"], regions: [
+    { region: "Lazio", cities: ["Rome","Latina","Viterbo","Frosinone"], prefix: "00" },
+    { region: "Lombardy", cities: ["Milan","Bergamo","Brescia","Como"], prefix: "20" },
+    { region: "Tuscany", cities: ["Florence","Pisa","Siena","Lucca"], prefix: "50" },
+    { region: "Campania", cities: ["Naples","Salerno","Caserta","Avellino"], prefix: "80" }
+  ]},
+  Turkish: { country: "Turkey", regionLabel: "Province", postalLabel: "Postal Code", suffixes: ["Caddesi","Sokak","Mahallesi","Bulvari"], streets: ["Ataturk","Cumhuriyet","Istiklal","Fatih","Inonu","Gazi","Mimar Sinan","Sevgi"], regions: [
+    { region: "Istanbul", cities: ["Istanbul","Kadikoy","Besiktas","Uskudar"], prefix: "34" },
+    { region: "Ankara", cities: ["Ankara","Cankaya","Kecioren","Mamak"], prefix: "06" },
+    { region: "Izmir", cities: ["Izmir","Konak","Bornova","Karsiyaka"], prefix: "35" },
+    { region: "Antalya", cities: ["Antalya","Alanya","Manavgat","Kemer"], prefix: "07" }
+  ]}
+};
+
 function getCountryKey(country){
   return String(country).split(" ")[0];
 }
@@ -207,6 +294,55 @@ function buildFullNamePool(country, religion, gender){
 
   FULL_NAME_POOL_CACHE.set(cacheKey, names);
   return names;
+}
+
+function pickOne(items){
+  return items[randInt(items.length)];
+}
+
+function cleanCustomValue(value){
+  return String(value || "").trim().replace(/\s+/g, " ");
+}
+
+function makePostalCode(countryKey, region){
+  const prefix = String(region?.prefix || "10");
+  const digitCount = countryKey === "Japanese" ? 7 : (countryKey === "Bangladeshi" ? 4 : (countryKey === "Indian" || countryKey === "Chinese" || countryKey === "Russian" ? 6 : 5));
+  const needed = Math.max(0, digitCount - prefix.length);
+  const raw = `${prefix}${randomDigits(needed)}`.slice(0, digitCount);
+  return countryKey === "Japanese" ? `${raw.slice(0, 3)}-${raw.slice(3)}` : raw;
+}
+
+function formatStreet(countryKey, data){
+  const number = randInt(990) + 10;
+  const street = pickOne(data.streets);
+  const suffix = pickOne(data.suffixes);
+
+  if (["Spanish","French","Italian"].includes(countryKey)) return `${suffix} ${street} ${number}`;
+  if (countryKey === "Japanese") return `${number}-${randInt(20) + 1} ${street} ${suffix}`;
+  if (countryKey === "Korean") return `${number} ${street}-${randInt(90) + 1} ${suffix}`;
+  if (countryKey === "Turkish") return `${street} ${suffix} No: ${number}`;
+  return `${number} ${street} ${suffix}`;
+}
+
+function generateAddress({ country, customState, customCity, customZip }){
+  const countryKey = getCountryKey(country);
+  const data = ADDRESS_DATA[countryKey] || ADDRESS_DATA.American;
+  const region = pickOne(data.regions);
+  const regionName = cleanCustomValue(customState) || region.region;
+  const city = cleanCustomValue(customCity) || pickOne(region.cities);
+  const postalCode = cleanCustomValue(customZip) || makePostalCode(countryKey, region);
+  const street = formatStreet(countryKey, data);
+
+  return {
+    street,
+    city,
+    region: regionName,
+    postalCode,
+    country: data.country,
+    regionLabel: data.regionLabel,
+    postalLabel: data.postalLabel,
+    text: `${street}\n${city}, ${regionName} ${postalCode}\n${data.country}`
+  };
 }
 
 // ---------- Username generation ----------
@@ -373,8 +509,8 @@ function resolveSelection(genderValue, countryValue, religionValue){
   return { gender, country, religion };
 }
 
-async function generateName({genderValue, countryValue, religionValue}){
-  const { gender, country, religion } = resolveSelection(genderValue, countryValue, religionValue);
+async function generateName({genderValue, countryValue, religionValue, resolvedSelection}){
+  const { gender, country, religion } = resolvedSelection || resolveSelection(genderValue, countryValue, religionValue);
   const religionPool = religion !== "any" ? buildFullNamePool(country, religion, gender) : [];
   const countryData = religionPool.length ? null : await loadCountryNames(country);
   const pool = religionPool.length ? religionPool : (countryData?.[gender] || []);
@@ -394,6 +530,7 @@ function createSection(){
     countryValue: "random",
     religionValue: "any",
     currentName: "",
+    currentAddress: "",
     usernameUsed: new Map(), // nameKey -> Set(usernames)
   };
 
@@ -452,6 +589,10 @@ function createSection(){
 
   const nameEl = node.querySelector('[data-role="nameValue"]');
   const usernameEl = node.querySelector('[data-role="usernameValue"]');
+  const addressEl = node.querySelector('[data-role="addressValue"]');
+  const customStateEl = node.querySelector('[data-role="customState"]');
+  const customCityEl = node.querySelector('[data-role="customCity"]');
+  const customZipEl = node.querySelector('[data-role="customZip"]');
 
   function animatePop(el){
     el.classList.remove("pop");
@@ -462,21 +603,32 @@ function createSection(){
   async function setNameAndUsername(){
     try{
       node.classList.add('loading');
-      const { name } = await generateName({genderValue: state.genderValue, countryValue: state.countryValue, religionValue: state.religionValue});
-    state.currentName = name;
-    nameEl.textContent = name;
-    animatePop(nameEl);
+      const selection = resolveSelection(state.genderValue, state.countryValue, state.religionValue);
+      const { name } = await generateName({genderValue: state.genderValue, countryValue: state.countryValue, religionValue: state.religionValue, resolvedSelection: selection});
+      state.currentName = name;
+      nameEl.textContent = name;
+      animatePop(nameEl);
 
-    const key = normalizeForUsername(name) || name;
-    if (!state.usernameUsed.has(key)) state.usernameUsed.set(key, new Set());
-    const usedSet = state.usernameUsed.get(key);
+      const address = generateAddress({
+        country: selection.country,
+        customState: customStateEl.value,
+        customCity: customCityEl.value,
+        customZip: customZipEl.value
+      });
+      state.currentAddress = address.text;
+      addressEl.textContent = address.text;
+      animatePop(addressEl);
 
-    const uname = generateUsernameFromName(name, usedSet);
-    usernameEl.textContent = uname;
-    animatePop(usernameEl);
+      const key = normalizeForUsername(name) || name;
+      if (!state.usernameUsed.has(key)) state.usernameUsed.set(key, new Set());
+      const usedSet = state.usernameUsed.get(key);
+
+      const uname = generateUsernameFromName(name, usedSet);
+      usernameEl.textContent = uname;
+      animatePop(usernameEl);
     }catch(err){
       console.error(err);
-      toast('Names load failed. Check data files / hosting.');
+      toast('Generation failed. Check data files / hosting.');
     }finally{
       node.classList.remove('loading');
     }
@@ -507,18 +659,21 @@ function createSection(){
   });
 
   async function handleCopy(kind){
-    const text = kind === "name" ? nameEl.textContent : usernameEl.textContent;
+    const text = kind === "name" ? nameEl.textContent : (kind === "address" ? addressEl.textContent : usernameEl.textContent);
     const ok = await copyText(text);
-    toast(ok ? `${kind === "name" ? "Name" : "Username"} copied` : "Copy failed (try HTTPS/localhost)");
+    const label = kind === "name" ? "Name" : (kind === "address" ? "Address" : "Username");
+    toast(ok ? `${label} copied` : "Copy failed (try HTTPS/localhost)");
   }
 
   const outName = node.querySelector('[data-action="copyName"]');
   const outUser = node.querySelector('[data-action="copyUsername"]');
+  const outAddress = node.querySelector('[data-action="copyAddress"]');
 
   outName.addEventListener("click", () => handleCopy("name"));
   outUser.addEventListener("click", () => handleCopy("username"));
+  outAddress.addEventListener("click", () => handleCopy("address"));
 
-  for (const el of [outName, outUser]){
+  for (const el of [outName, outUser, outAddress]){
     el.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " "){
         e.preventDefault();

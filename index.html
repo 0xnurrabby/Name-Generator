@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=16">
+  <link rel="stylesheet" href="styles.css?v=17">
 
 </head>
 <body>
@@ -152,6 +152,15 @@
         </div>
       </div>
 
+      <div class="address-tools">
+        <div class="address-title">Address Generator <span>optional custom fields</span></div>
+        <div class="address-fields">
+          <input class="field" type="text" data-role="customState" placeholder="State / Province" autocomplete="off">
+          <input class="field" type="text" data-role="customCity" placeholder="City" autocomplete="off">
+          <input class="field" type="text" data-role="customZip" placeholder="Zip / Postal Code" autocomplete="off">
+        </div>
+      </div>
+
       <div class="outputs">
         <div class="out" data-action="copyName" tabindex="0" role="button" aria-label="Copy name">
           <div class="out-top">
@@ -177,12 +186,20 @@
             </button>
           </div>
         </div>
+
+        <div class="out out-address" data-action="copyAddress" tabindex="0" role="button" aria-label="Copy address">
+          <div class="out-top">
+            <div class="out-label">Address</div>
+            <div class="out-hint">Tap to copy</div>
+          </div>
+          <div class="out-value mono address-value" data-role="addressValue">—</div>
+        </div>
       </div>
 
       <div class="note">Tip: Add up to 5 sections and generate in parallel.</div>
     </section>
   </template>
 
-  <script src="script.js?v=24"></script>
+  <script src="script.js?v=25"></script>
 </body>
 </html>
