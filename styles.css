@@ -307,6 +307,28 @@ html[data-theme="dark"] .theme-text{
   align-items:start;
 }
 
+.seo-summary{
+  margin: 0 auto 14px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.seo-summary h1{
+  margin: 0 0 6px;
+  color: var(--text);
+  font-size: clamp(18px, 3vw, 28px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.seo-summary p{
+  width: min(680px, 100%);
+  margin: 0 auto;
+  font-size: 13px;
+  line-height: 1.55;
+  font-weight: 700;
+}
+
 .card{
   background: var(--panel);
   border: 1px solid var(--stroke);
