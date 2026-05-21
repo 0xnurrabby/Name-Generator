@@ -329,6 +329,75 @@ html[data-theme="dark"] .theme-text{
   font-weight: 700;
 }
 
+.seo-content{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.seo-card{
+  border: 1px solid var(--stroke);
+  background: var(--panel);
+  border-radius: var(--radius2);
+  padding: 16px;
+  box-shadow: var(--shadow2);
+}
+
+.seo-wide{
+  grid-column: 1 / -1;
+}
+
+.seo-card h2{
+  margin: 0 0 10px;
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: -.01em;
+}
+
+.seo-card p,
+.seo-card li{
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.65;
+  font-weight: 700;
+}
+
+.seo-card p{
+  margin: 0 0 10px;
+}
+
+.seo-card p:last-child{
+  margin-bottom: 0;
+}
+
+.seo-card ul,
+.seo-card ol{
+  margin: 0;
+  padding-left: 18px;
+}
+
+.seo-card details{
+  border-top: 1px solid var(--stroke);
+  padding: 10px 0;
+}
+
+.seo-card details:first-of-type{
+  border-top: 0;
+}
+
+.seo-card summary{
+  cursor: pointer;
+  color: var(--text);
+  font-weight: 900;
+  font-size: 13px;
+}
+
+.seo-card details p{
+  margin-top: 8px;
+}
+
 .card{
   background: var(--panel);
   border: 1px solid var(--stroke);
@@ -870,6 +939,10 @@ html[data-theme="dark"] .address-title{ color: rgba(255,255,255,.70); }
   }
 
   .address-fields{
+    grid-template-columns: 1fr;
+  }
+
+  .seo-content{
     grid-template-columns: 1fr;
   }
 
