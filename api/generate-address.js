@@ -29,15 +29,22 @@ module.exports = async function handler(req, res){
   const customState = String(body.customState || "").trim();
   const customCity = String(body.customCity || "").trim();
   const customZip = String(body.customZip || "").trim();
+  const draft = body.draft && typeof body.draft === "object" ? body.draft : {};
 
   const prompt = [
     `Country: ${country}`,
+    `Draft street: ${String(draft.street || "").trim()}`,
+    `Draft city: ${String(draft.city || "").trim()}`,
+    `Draft state/province/region: ${String(draft.region || "").trim()}`,
+    `Draft ZIP/postal code: ${String(draft.postalCode || "").trim()}`,
     customState ? `State/Province/Region: ${customState}` : "",
     customCity ? `City: ${customCity}` : "",
     customZip ? `ZIP/Postal Code: ${customZip}` : "",
-    "Generate one realistic but fictional address. Do not use a real person's private information.",
-    "If State/Province, City, or ZIP/Postal Code is provided, use that provided value exactly.",
-    "Postal code must match the selected country's normal format.",
+    "Verify and correct the draft fictional address so every location field belongs to the selected country.",
+    "Do not use a real person's private information.",
+    "If a custom State/City/ZIP is compatible with the selected country, keep it. If it is impossible or mismatched, replace it with a valid matching value.",
+    "Example: Dhaka with United States is invalid, so replace city/region/postal code with a valid United States combination.",
+    "Postal code must match the selected country's normal format and be plausible for the corrected region/city.",
     "Return only JSON with keys: street, city, region, postalCode, country."
   ].filter(Boolean).join("\n");
 
@@ -51,7 +58,7 @@ module.exports = async function handler(req, res){
       body: JSON.stringify({
         model: MODEL,
         messages: [
-          { role: "system", content: "You generate realistic fictional postal addresses and return strict JSON only." },
+          { role: "system", content: "You verify and correct fictional postal addresses. Return strict JSON only." },
           { role: "user", content: prompt }
         ],
         stream: false,

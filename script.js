@@ -328,9 +328,13 @@ function formatStreet(countryKey, data){
 
 async function generateAddress({ country, customState, customCity, customZip }){
   const countryKey = getCountryKey(country);
-  const aiResult = await generateAddressWithAI({ country, customState, customCity, customZip, countryKey });
+  const localAddress = generateLocalAddress({ country, customState, customCity, customZip, countryKey });
+  const aiResult = await correctAddressWithAI({ country, customState, customCity, customZip, countryKey, draft: localAddress });
   if (aiResult) return aiResult;
+  return localAddress;
+}
 
+function generateLocalAddress({ country, customState, customCity, customZip, countryKey }){
   const data = ADDRESS_DATA[countryKey] || ADDRESS_DATA.American;
   const region = pickOne(data.regions);
   const regionName = cleanCustomValue(customState) || region.region;
@@ -357,13 +361,14 @@ async function requestAIAddress(payload){
   }catch(_){ return null; }
 }
 
-async function generateAddressWithAI({ country, customState, customCity, customZip, countryKey }){
+async function correctAddressWithAI({ country, customState, customCity, customZip, countryKey, draft }){
   const countryName = ADDRESS_DATA[countryKey]?.country || countryKey;
   const result = await requestAIAddress({
     country: countryName,
     customState: cleanCustomValue(customState),
     customCity: cleanCustomValue(customCity),
-    customZip: cleanCustomValue(customZip)
+    customZip: cleanCustomValue(customZip),
+    draft
   });
   if (!result) return null;
   return {
