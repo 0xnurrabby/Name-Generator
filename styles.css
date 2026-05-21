@@ -258,6 +258,10 @@ html[data-theme="dark"] .adblock-wall{
   color: rgba(17,24,39,.70);
 }
 
+html[data-theme="dark"] .theme-text{
+  color: rgba(255,255,255,.88);
+}
+
 
 .grid{
   display:grid;
