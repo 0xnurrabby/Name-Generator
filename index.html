@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=17">
+  <link rel="stylesheet" href="styles.css?v=18">
 
 </head>
 <body>
@@ -159,6 +159,14 @@
           <input class="field" type="text" data-role="customCity" placeholder="City" autocomplete="off">
           <input class="field" type="text" data-role="customZip" placeholder="Zip / Postal Code" autocomplete="off">
         </div>
+        <details class="ai-settings">
+          <summary>AI Settings</summary>
+          <div class="ai-settings-body">
+            <label>Vercel Gateway Token</label>
+            <input class="field ai-token" type="password" data-role="gatewayToken" placeholder="Enter your Vercel Gateway token" autocomplete="off">
+            <div class="ai-hint">Address generated with Gemini 2.5 Flash Lite when token is set. Falls back to local data on error.</div>
+          </div>
+        </details>
       </div>
 
       <div class="outputs">
@@ -200,6 +208,6 @@
     </section>
   </template>
 
-  <script src="script.js?v=25"></script>
+  <script src="script.js?v=26"></script>
 </body>
 </html>

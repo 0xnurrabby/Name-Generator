@@ -6,6 +6,27 @@
 
 const MAX_SECTIONS = 5;
 
+// Vercel AI Gateway config – set your token here, via VITE_VERCEL_GATEWAY_TOKEN env,
+// or paste it into the "AI Settings" input on the page (persisted in localStorage).
+const GATEWAY_CONFIG = {
+  baseUrl: "https://gateway.vercel.ai/v1/chat/completions",
+  model: "gemini-2.5-flash-lite",
+  token: "",
+};
+
+function getGatewayToken(){
+  if (GATEWAY_CONFIG.token) return GATEWAY_CONFIG.token;
+  try {
+    const saved = localStorage.getItem("vg_token");
+    if (saved) return saved;
+  } catch(_){}
+  try {
+    if (typeof import.meta !== "undefined" && import.meta.env?.VITE_VERCEL_GATEWAY_TOKEN)
+      return import.meta.env.VITE_VERCEL_GATEWAY_TOKEN;
+  } catch(_){}
+  return "";
+}
+
 const COUNTRIES = [
   "American 🇺🇸","Arabic 🇸🇦","Indian 🇮🇳","Bangladeshi 🇧🇩","Pakistani 🇵🇰","Chinese 🇨🇳","Japanese 🇯🇵","Korean 🇰🇷🇰🇵",
   "Spanish 🇪🇸","French 🇫🇷","German 🇩🇪","Russian 🇷🇺","Italian 🇮🇹","Turkish 🇹🇷"
@@ -324,8 +345,15 @@ function formatStreet(countryKey, data){
   return `${number} ${street} ${suffix}`;
 }
 
-function generateAddress({ country, customState, customCity, customZip }){
+async function generateAddress({ country, customState, customCity, customZip }){
   const countryKey = getCountryKey(country);
+  const token = getGatewayToken();
+
+  if (token){
+    const aiResult = await generateAddressWithAI({ country, customState, customCity, customZip, countryKey });
+    if (aiResult) return aiResult;
+  }
+
   const data = ADDRESS_DATA[countryKey] || ADDRESS_DATA.American;
   const region = pickOne(data.regions);
   const regionName = cleanCustomValue(customState) || region.region;
@@ -334,14 +362,58 @@ function generateAddress({ country, customState, customCity, customZip }){
   const street = formatStreet(countryKey, data);
 
   return {
-    street,
-    city,
-    region: regionName,
-    postalCode,
-    country: data.country,
-    regionLabel: data.regionLabel,
-    postalLabel: data.postalLabel,
+    street, city, region: regionName, postalCode,
+    country: data.country, regionLabel: data.regionLabel, postalLabel: data.postalLabel,
     text: `${street}\n${city}, ${regionName} ${postalCode}\n${data.country}`
+  };
+}
+
+async function callAIGateway(messages){
+  const token = getGatewayToken();
+  if (!token) return null;
+  try{
+    const res = await fetch(GATEWAY_CONFIG.baseUrl, {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: GATEWAY_CONFIG.model,
+        messages,
+        temperature: 0.3,
+        max_tokens: 512,
+        response_format: { type: "json_object" }
+      })
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    const content = json?.choices?.[0]?.message?.content;
+    if (!content) return null;
+    return JSON.parse(content);
+  }catch(_){ return null; }
+}
+
+async function generateAddressWithAI({ country, customState, customCity, customZip, countryKey }){
+  const countryName = ADDRESS_DATA[countryKey]?.country || countryKey;
+  const prompt = [
+    { role: "system", content: "You are a realistic address generator. Respond only with valid JSON: {\"street\":\"...\",\"city\":\"...\",\"region\":\"...\",\"postalCode\":\"...\",\"country\":\"...\"}" },
+    { role: "user", content: [
+      `Country: ${countryName}`,
+      customState ? `State/Province: ${customState}` : "",
+      customCity ? `City: ${customCity}` : "",
+      customZip ? `ZIP/Postal Code: ${customZip}` : "",
+      "Generate a realistic street address, city, region, and postal code matching this country's format. If a field is provided above, use it exactly."
+    ].filter(Boolean).join("\n") }
+  ];
+  const result = await callAIGateway(prompt);
+  if (!result) return null;
+  return {
+    street: result.street || "—",
+    city: result.city || "—",
+    region: result.region || "—",
+    postalCode: result.postalCode || "—",
+    country: result.country || countryName,
+    regionLabel: "",
+    postalLabel: "",
+    text: `${result.street || "—"}\n${result.city || "—"}, ${result.region || "—"} ${result.postalCode || "—"}\n${result.country || countryName}`
   };
 }
 
@@ -593,6 +665,18 @@ function createSection(){
   const customStateEl = node.querySelector('[data-role="customState"]');
   const customCityEl = node.querySelector('[data-role="customCity"]');
   const customZipEl = node.querySelector('[data-role="customZip"]');
+  const gatewayTokenEl = node.querySelector('[data-role="gatewayToken"]');
+  if (gatewayTokenEl){
+    try{
+      const saved = localStorage.getItem("vg_token");
+      if (saved) gatewayTokenEl.value = saved;
+    }catch(_){}
+    gatewayTokenEl.addEventListener("input", () => {
+      const val = gatewayTokenEl.value.trim();
+      GATEWAY_CONFIG.token = val;
+      try{ localStorage.setItem("vg_token", val); }catch(_){}
+    });
+  }
 
   function animatePop(el){
     el.classList.remove("pop");
@@ -609,7 +693,7 @@ function createSection(){
       nameEl.textContent = name;
       animatePop(nameEl);
 
-      const address = generateAddress({
+      const address = await generateAddress({
         country: selection.country,
         customState: customStateEl.value,
         customCity: customCityEl.value,
