@@ -37,6 +37,9 @@ module.exports = async function handler(req, res){
     `Draft city: ${String(draft.city || "").trim()}`,
     `Draft state/province/region: ${String(draft.region || "").trim()}`,
     `Draft ZIP/postal code: ${String(draft.postalCode || "").trim()}`,
+    `Draft phone: ${String(draft.phone || "").trim()}`,
+    `Draft latitude: ${String(draft.latitude || "").trim()}`,
+    `Draft longitude: ${String(draft.longitude || "").trim()}`,
     customState ? `State/Province/Region: ${customState}` : "",
     customCity ? `City: ${customCity}` : "",
     customZip ? `ZIP/Postal Code: ${customZip}` : "",
@@ -45,7 +48,8 @@ module.exports = async function handler(req, res){
     "If a custom State/City/ZIP is compatible with the selected country, keep it. If it is impossible or mismatched, replace it with a valid matching value.",
     "Example: Dhaka with United States is invalid, so replace city/region/postal code with a valid United States combination.",
     "Postal code must match the selected country's normal format and be plausible for the corrected region/city.",
-    "Return only JSON with keys: street, city, region, postalCode, country."
+    "Also return a fictional local-format phone number and plausible latitude/longitude for the corrected city or region.",
+    "Return only JSON with keys: street, city, region, postalCode, phone, country, latitude, longitude."
   ].filter(Boolean).join("\n");
 
   try{
@@ -79,7 +83,10 @@ module.exports = async function handler(req, res){
       city: String(address.city || customCity || "").trim(),
       region: String(address.region || customState || "").trim(),
       postalCode: String(address.postalCode || customZip || "").trim(),
-      country: String(address.country || country).trim()
+      phone: String(address.phone || draft.phone || "").trim(),
+      country: String(address.country || country).trim(),
+      latitude: String(address.latitude || draft.latitude || "").trim(),
+      longitude: String(address.longitude || draft.longitude || "").trim()
     });
   }catch(err){
     return send(res, 502, { error: "Address generation failed" });

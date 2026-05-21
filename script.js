@@ -121,6 +121,23 @@ const RELIGION_DATA = {
 
 const FULL_NAME_POOL_CACHE = new Map();
 
+const GEO_BOUNDS = {
+  American: { lat: [25.0, 49.0], lon: [-124.0, -67.0], phone: "+1" },
+  Arabic: { lat: [16.0, 32.0], lon: [34.0, 56.0], phone: "+966" },
+  Indian: { lat: [8.0, 35.0], lon: [68.0, 97.0], phone: "+91" },
+  Bangladeshi: { lat: [20.7, 26.6], lon: [88.0, 92.7], phone: "+880" },
+  Pakistani: { lat: [24.0, 37.0], lon: [61.0, 77.0], phone: "+92" },
+  Chinese: { lat: [18.0, 53.0], lon: [73.0, 135.0], phone: "+86" },
+  Japanese: { lat: [30.0, 45.8], lon: [129.0, 146.0], phone: "+81" },
+  Korean: { lat: [33.0, 38.6], lon: [126.0, 130.0], phone: "+82" },
+  Spanish: { lat: [36.0, 43.8], lon: [-9.5, 3.3], phone: "+34" },
+  French: { lat: [41.0, 51.0], lon: [-5.0, 8.5], phone: "+33" },
+  German: { lat: [47.0, 55.0], lon: [5.5, 15.5], phone: "+49" },
+  Russian: { lat: [41.0, 69.0], lon: [30.0, 150.0], phone: "+7" },
+  Italian: { lat: [36.0, 47.0], lon: [6.5, 18.5], phone: "+39" },
+  Turkish: { lat: [36.0, 42.0], lon: [26.0, 45.0], phone: "+90" }
+};
+
 const ADDRESS_DATA = {
   American: { country: "United States", regionLabel: "State", postalLabel: "ZIP Code", suffixes: ["Street","Avenue","Road","Drive","Lane","Boulevard"], streets: ["Maple","Oak","Cedar","Washington","Lincoln","Hillcrest","Sunset","Lakeview"], regions: [
     { region: "California", cities: ["Los Angeles","San Diego","San Jose","Sacramento"], prefix: "90" },
@@ -314,6 +331,18 @@ function makePostalCode(countryKey, region){
   return countryKey === "Japanese" ? `${raw.slice(0, 3)}-${raw.slice(3)}` : raw;
 }
 
+function makePhoneNumber(countryKey){
+  const prefix = GEO_BOUNDS[countryKey]?.phone || "+1";
+  return `${prefix} ${randInt(900) + 100}-${randInt(900) + 100}-${randInt(9000) + 1000}`;
+}
+
+function makeCoordinates(countryKey){
+  const bounds = GEO_BOUNDS[countryKey] || GEO_BOUNDS.American;
+  const lat = bounds.lat[0] + (randInt(1000000) / 1000000) * (bounds.lat[1] - bounds.lat[0]);
+  const lon = bounds.lon[0] + (randInt(1000000) / 1000000) * (bounds.lon[1] - bounds.lon[0]);
+  return { latitude: lat.toFixed(6), longitude: lon.toFixed(6) };
+}
+
 function formatStreet(countryKey, data){
   const number = randInt(990) + 10;
   const street = pickOne(data.streets);
@@ -341,9 +370,11 @@ function generateLocalAddress({ country, customState, customCity, customZip, cou
   const city = cleanCustomValue(customCity) || pickOne(region.cities);
   const postalCode = cleanCustomValue(customZip) || makePostalCode(countryKey, region);
   const street = formatStreet(countryKey, data);
+  const coords = makeCoordinates(countryKey);
 
   return {
-    street, city, region: regionName, postalCode,
+    street, city, region: regionName, postalCode, phone: makePhoneNumber(countryKey),
+    latitude: coords.latitude, longitude: coords.longitude,
     country: data.country, regionLabel: data.regionLabel, postalLabel: data.postalLabel,
     text: `${street}\n${city}, ${regionName} ${postalCode}\n${data.country}`
   };
@@ -376,6 +407,9 @@ async function correctAddressWithAI({ country, customState, customCity, customZi
     city: result.city || "—",
     region: result.region || "—",
     postalCode: result.postalCode || "—",
+    phone: result.phone || draft.phone || "—",
+    latitude: result.latitude || draft.latitude || "—",
+    longitude: result.longitude || draft.longitude || "—",
     country: result.country || countryName,
     regionLabel: "",
     postalLabel: "",
@@ -631,6 +665,46 @@ function createSection(){
   const customStateEl = node.querySelector('[data-role="customState"]');
   const customCityEl = node.querySelector('[data-role="customCity"]');
   const customZipEl = node.querySelector('[data-role="customZip"]');
+
+  function updateAddressDetails(address, profile = {}){
+    const values = {
+      fullName: profile.fullName,
+      username: profile.username,
+      gender: profile.gender,
+      religion: profile.religion,
+      street: address?.street,
+      city: address?.city,
+      region: address?.region,
+      postalCode: address?.postalCode,
+      phone: address?.phone,
+      country: address?.country,
+      latitude: address?.latitude,
+      longitude: address?.longitude
+    };
+
+    for (const [field, value] of Object.entries(values)){
+      const el = node.querySelector(`[data-address-field="${field}"]`);
+      if (el) el.textContent = value || "—";
+    }
+  }
+
+  function getAddressDetailText(){
+    return [
+      ["Full Name", node.querySelector('[data-address-field="fullName"]')?.textContent],
+      ["Username", node.querySelector('[data-address-field="username"]')?.textContent],
+      ["Gender", node.querySelector('[data-address-field="gender"]')?.textContent],
+      ["Religion", node.querySelector('[data-address-field="religion"]')?.textContent],
+      ["Street", node.querySelector('[data-address-field="street"]')?.textContent],
+      ["City / Town", node.querySelector('[data-address-field="city"]')?.textContent],
+      ["State / Province / Region", node.querySelector('[data-address-field="region"]')?.textContent],
+      ["Zip / Postal Code", node.querySelector('[data-address-field="postalCode"]')?.textContent],
+      ["Phone Number", node.querySelector('[data-address-field="phone"]')?.textContent],
+      ["Country", node.querySelector('[data-address-field="country"]')?.textContent],
+      ["Latitude", node.querySelector('[data-address-field="latitude"]')?.textContent],
+      ["Longitude", node.querySelector('[data-address-field="longitude"]')?.textContent]
+    ].map(([label, value]) => `${label}: ${value || "—"}`).join("\n");
+  }
+
   function animatePop(el){
     el.classList.remove("pop");
     void el.offsetWidth;
@@ -663,6 +737,12 @@ function createSection(){
       const uname = generateUsernameFromName(name, usedSet);
       usernameEl.textContent = uname;
       animatePop(usernameEl);
+      updateAddressDetails(address, {
+        fullName: name,
+        username: uname,
+        gender: selection.gender,
+        religion: selection.religion === "any" ? "Any" : selection.religion
+      });
     }catch(err){
       console.error(err);
       toast('Generation failed. Check data files / hosting.');
@@ -709,6 +789,22 @@ function createSection(){
   outName.addEventListener("click", () => handleCopy("name"));
   outUser.addEventListener("click", () => handleCopy("username"));
   outAddress.addEventListener("click", () => handleCopy("address"));
+
+  node.querySelector('[data-action="copyAddressDetails"]')?.addEventListener("click", async (e) => {
+    e.stopPropagation();
+    const ok = await copyText(getAddressDetailText());
+    toast(ok ? "Address details copied" : "Copy failed (try HTTPS/localhost)");
+  });
+
+  node.querySelectorAll('[data-copy-address-field]').forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const field = btn.dataset.copyAddressField;
+      const value = node.querySelector(`[data-address-field="${field}"]`)?.textContent;
+      const ok = await copyText(value);
+      toast(ok ? "Field copied" : "Copy failed (try HTTPS/localhost)");
+    });
+  });
 
   for (const el of [outName, outUser, outAddress]){
     el.addEventListener("keydown", (e) => {
