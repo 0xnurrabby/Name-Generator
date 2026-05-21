@@ -86,6 +86,81 @@ body{
   min-height: 100vh;
 }
 
+.adblock-active body{
+  overflow: hidden;
+}
+
+#adblockBait{
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.adblock-active .app{
+  filter: blur(7px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.adblock-wall{
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(245,246,248,.84);
+  backdrop-filter: blur(10px);
+}
+
+.adblock-wall[hidden]{
+  display: none;
+}
+
+.adblock-card{
+  width: min(440px, 100%);
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+  text-align: center;
+}
+
+.adblock-kicker{
+  color: var(--danger);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.adblock-card h2{
+  margin: 10px 0 10px;
+  font-size: clamp(22px, 4vw, 30px);
+  line-height: 1.12;
+}
+
+.adblock-card p{
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.adblock-refresh{
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+html[data-theme="dark"] .adblock-wall{
+  background: rgba(11,18,32,.84);
+}
+
 .app{
   width: min(900px, calc(100% - 28px));
   margin: 0 auto;

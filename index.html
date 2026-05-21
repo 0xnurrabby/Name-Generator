@@ -9,10 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="styles.css?v=15">
 
 </head>
 <body>
+  <div class="adsbox ad-banner ad-unit textads banner-ads" id="adblockBait" aria-hidden="true"></div>
+
   <div class="app">
     <header class="topbar">
   <div class="topspacer"></div>
@@ -35,7 +37,7 @@
             'params' : {}
           };
         </script>
-        <script src="https://www.highperformanceformat.com/a2ecd025c7f9dc836ba8651350da89ee/invoke.js"></script>
+        <script src="https://www.highperformanceformat.com/a2ecd025c7f9dc836ba8651350da89ee/invoke.js" onerror="window.__adLoadBlocked = true"></script>
       </div>
 
       <div class="ad-slot ad-mobile">
@@ -48,7 +50,7 @@
             'params' : {}
           };
         </script>
-        <script src="https://www.highperformanceformat.com/eb3a273c95a09717b44204f62d3b3496/invoke.js"></script>
+        <script src="https://www.highperformanceformat.com/eb3a273c95a09717b44204f62d3b3496/invoke.js" onerror="window.__adLoadBlocked = true"></script>
       </div>
     </div>
 
@@ -69,11 +71,11 @@
             'params' : {}
           };
         </script>
-        <script src="https://www.highperformanceformat.com/63d976b5eb020ad7d2a6bf1b16573593/invoke.js"></script>
+        <script src="https://www.highperformanceformat.com/63d976b5eb020ad7d2a6bf1b16573593/invoke.js" onerror="window.__adLoadBlocked = true"></script>
       </div>
 
       <div class="ad-native">
-        <script async="async" data-cfasync="false" src="https://pl29510710.effectivecpmnetwork.com/fed3da6642a57857f8fe9405273c3fff/invoke.js"></script>
+        <script async="async" data-cfasync="false" src="https://pl29510710.effectivecpmnetwork.com/fed3da6642a57857f8fe9405273c3fff/invoke.js" onerror="window.__adLoadBlocked = true"></script>
         <div id="container-fed3da6642a57857f8fe9405273c3fff"></div>
       </div>
     </div>
@@ -83,6 +85,15 @@
     </button>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <div class="adblock-wall" id="adblockWall" role="dialog" aria-modal="true" aria-labelledby="adblockTitle" hidden>
+    <div class="adblock-card">
+      <div class="adblock-kicker">Adblock Detected</div>
+      <h2 id="adblockTitle">Please turn off your ad blocker</h2>
+      <p>This website is free because of ads. Please disable AdBlock, uBlock, Brave Shields, or any ad blocking extension for this site, then refresh the page.</p>
+      <button class="btn btn-anim adblock-refresh" type="button" data-action="reloadPage"><span class="btn-text">Refresh</span></button>
+    </div>
   </div>
 
   <template id="sectionTemplate">
@@ -172,6 +183,6 @@
     </section>
   </template>
 
-  <script src="script.js?v=22"></script>
+  <script src="script.js?v=23"></script>
 </body>
 </html>

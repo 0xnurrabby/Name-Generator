@@ -590,6 +590,33 @@ themeToggle.addEventListener("click", () => {
   applyTheme(current === "dark" ? "light" : "dark");
 });
 
+// ---------- Adblock detection ----------
+function isElementBlocked(el){
+  if (!el || !document.body.contains(el)) return true;
+  const style = window.getComputedStyle(el);
+  return style.display === "none" || style.visibility === "hidden" || el.offsetHeight === 0 || el.offsetWidth === 0;
+}
+
+function showAdblockWall(){
+  const wall = document.getElementById("adblockWall");
+  if (!wall || document.documentElement.classList.contains("adblock-active")) return;
+  document.documentElement.classList.add("adblock-active");
+  wall.hidden = false;
+  wall.querySelector('[data-action="reloadPage"]')?.focus();
+}
+
+function checkAdblock(){
+  const bait = document.getElementById("adblockBait");
+  const visibleAdSlot = window.matchMedia?.("(max-width: 560px)").matches
+    ? document.querySelector(".ad-mobile")
+    : document.querySelector(".ad-desktop");
+  const adWasBlocked = Boolean(window.__adLoadBlocked) || isElementBlocked(bait) || isElementBlocked(visibleAdSlot);
+  if (adWasBlocked) showAdblockWall();
+}
+
+document.querySelector('[data-action="reloadPage"]')?.addEventListener("click", () => location.reload());
+
 // Boot
 applyTheme(getPreferredTheme());
 createSection();
+window.setTimeout(checkAdblock, 3500);
