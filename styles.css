@@ -218,6 +218,43 @@ html[data-theme="dark"] .adblock-wall{
   width: min(728px, 100%);
 }
 
+.ad-rail{
+  position: fixed;
+  top: 180px;
+  z-index: 3;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  max-width: 160px;
+}
+
+.ad-rail-left{
+  left: max(18px, calc((100vw - 900px) / 2 - 190px));
+}
+
+.ad-rail-right{
+  right: max(18px, calc((100vw - 900px) / 2 - 190px));
+}
+
+@media (min-width: 1320px){
+  .ad-rail-right{
+    display: flex;
+  }
+}
+
+@media (min-width: 1460px) and (min-height: 760px){
+  .ad-rail-left{
+    display: flex;
+  }
+}
+
+@media (max-height: 760px){
+  .ad-rail-left{
+    display: none;
+  }
+}
+
 
 .brand{ display:flex; align-items:center; gap: 12px; }
 .logo{
