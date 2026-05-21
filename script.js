@@ -607,11 +607,7 @@ function showAdblockWall(){
 
 function checkAdblock(){
   const bait = document.getElementById("adblockBait");
-  const visibleAdSlot = window.matchMedia?.("(max-width: 560px)").matches
-    ? document.querySelector(".ad-mobile")
-    : document.querySelector(".ad-desktop");
-  const adWasBlocked = Boolean(window.__adLoadBlocked) || isElementBlocked(bait) || isElementBlocked(visibleAdSlot);
-  if (adWasBlocked) showAdblockWall();
+  if (isElementBlocked(bait)) showAdblockWall();
 }
 
 document.querySelector('[data-action="reloadPage"]')?.addEventListener("click", () => location.reload());
